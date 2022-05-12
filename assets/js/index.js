@@ -1,6 +1,416 @@
 'use strict';
 alert('Добрый день! Уважаемый проверяющий, прошу Вас проверить мою работу завтра (если у Вас есть такая возможность.). Из-за перегруженности работой, не успел доделать. Спасибо за понимание!');
 
+class Keyboard {
+    constructor(keyboard) {
+        this.rows;
+        this.keys;
+    }
+
+    getMarkup() {
+        let body = document.querySelector('body');
+        let basicMarkup = `<div class="container">
+        <div class="night-mode">
+          <div class="toggle-circle"></div>
+        </div>
+  
+        <div class="color-changer">
+          <div class="colors">
+            <input type="color" class="colors-input" />
+          </div>
+        </div>
+  
+        <textarea type="text" class="text" value="" autofocus></textarea> 
+  
+        <div class="keyboard__wrapper">
+                  <div class="keyboard__color"></div>
+          <div class="keyboard__keys">
+            <div class="row"></div>
+            <div class="row"></div>
+            <div class="row"></div>
+            <div class="row"></div>
+            <div class="row"></div>
+            <!-- /.keyboard__keys -->
+          </div>
+          <!-- /.keyboard__wrapper -->
+        </div>
+      </div>`
+
+        body.innerHTML = basicMarkup;
+    }
+
+    getRows() {
+        this.rows = document.querySelectorAll('.row');
+    }
+
+    getKeys() {
+        let keys = {
+            row1: {
+                '1': {
+                    eng: ['`', '~', '`'],
+                    rus: ['ё', 'Ё', '`'],
+                    'class': ['keys']
+                },
+                '2': {
+                    eng: ['1', '!', '1'],
+                    rus: ['1', '!', '1'],
+                    'class': ['keys']
+                },
+                '3': {
+                    eng: ['2', '@', '2'],
+                    rus: ['2', '"', '2'],
+                    'class': ['keys']
+                },
+                '4': {
+                    eng: ['3', '#', '3'],
+                    rus: ['3', '№', '3'],
+                    'class': ['keys']
+                },
+                '5': {
+                    eng: ['4', '$', '4'],
+                    rus: ['4', ';', '4'],
+                    'class': ['keys']
+                },
+                '6': {
+                    eng: ['5', '%', '5'],
+                    rus: ['5', '%', '5'],
+                    'class': ['keys']
+                },
+                '7': {
+                    eng: ['6', '^', '6'],
+                    rus: ['6', ':', '6'],
+                    'class': ['keys']
+                },
+                '8': {
+                    eng: ['7', '&', '7'],
+                    rus: ['7', '?', '7'],
+                    'class': ['keys']
+                },
+                '9': {
+                    eng: ['8', '*', '8'],
+                    rus: ['8', '*', '8'],
+                    'class': ['keys']
+                },
+                '10': {
+                    eng: ['9', '(', '9'],
+                    rus: ['9', '(', '9'],
+                    'class': ['keys']
+                },
+                '11': {
+                    eng: ['0', ')', '0'],
+                    rus: ['0', ')', '0'],
+                    'class': ['keys']
+                },
+                '12': {
+                    eng: ['-', '_', '-'],
+                    rus: ['-', '_', '-'],
+                    'class': ['keys']
+                },
+                '13': {
+                    eng: ['=', '+', '='],
+                    rus: ['=', '+', '='],
+                    'class': ['keys']
+                },
+                'backspace': {
+                    eng: ['Backspace', 'Backspace', 'Backspace'],
+                    rus: ['Backspace', 'Backspace', 'Backspace'],
+                    'class': ['keys', 'backspace-key']
+                }
+            },
+            row2: {
+                '1': {
+                    eng: ['Tab', 'Tab', 'Tab'],
+                    rus: ['Tab', 'Tab', 'Tab'],
+                    'class': ['keys', 'tab-key']
+                },
+                '2': {
+                    eng: ['q', 'Q', 'Q'],
+                    rus: ['й', 'Й', 'Й'],
+                    'class': ['keys']
+                },
+                '3': {
+                    eng: ['w', 'W', 'W'],
+                    rus: ['ц', 'Ц', 'Ц'],
+                    'class': ['keys']
+                },
+                '4': {
+                    eng: ['e', 'E', 'E'],
+                    rus: ['У', 'У', 'У'],
+                    'class': ['keys']
+                },
+                '5': {
+                    eng: ['r', 'R', 'R'],
+                    rus: ['к', 'К', 'К'],
+                    'class': ['keys']
+                },
+                '6': {
+                    eng: ['t', 'T', 'T'],
+                    rus: ['е', 'Е', 'Е'],
+                    'class': ['keys']
+                },
+                '7': {
+                    eng: ['y', 'Y', 'Y'],
+                    rus: ['н', 'Н', 'Н'],
+                    'class': ['keys']
+                },
+                '8': {
+                    eng: ['u', 'U', 'U'],
+                    rus: ['г', 'Г', 'Г'],
+                    'class': ['keys']
+                },
+                '9': {
+                    eng: ['i', 'I', 'I'],
+                    rus: ['ш', 'Ш', 'Ш'],
+                    'class': ['keys']
+                },
+                '10': {
+                    eng: ['o', 'O', 'O'],
+                    rus: ['щ', 'Щ', 'Щ'],
+                    'class': ['keys']
+                },
+                '11': {
+                    eng: ['p', 'P', 'P'],
+                    rus: ['з', 'З', 'З'],
+                    'class': ['keys']
+                },
+                '12': {
+                    eng: ['[', '{', '['],
+                    rus: ['х', 'Х', 'Х'],
+                    'class': ['keys']
+                },
+                '13': {
+                    eng: [']', '}', ']'],
+                    rus: ['ъ', 'Ъ', 'Ъ'],
+                    'class': ['keys']
+                },
+                '14': {
+                    eng: ['\/', "'\'", "'\'"],
+                    rus: ["'\'", "'\'", "'\'"],
+                    'class': ['keys', 'slash-key']
+                }
+            },
+            row3: {
+                '1': {
+                    eng: ['Caps Lock', 'Caps Lock', 'Caps Lock'],
+                    rus: ['Caps Lock', 'Caps Lock', 'Caps Lock'],
+                    'class': ['keys', 'CL-key']
+                },
+                '2': {
+                    eng: ['a', 'A', 'A'],
+                    rus: ['ф', 'Ф', 'Ф'],
+                    'class': ['keys']
+                },
+                '3': {
+                    eng: ['s', 'S', 'S'],
+                    rus: ['ы', 'Ы', 'Ы'],
+                    'class': ['keys']
+                },
+                '4': {
+                    eng: ['d', 'D', 'D'],
+                    rus: ['в', 'В', 'В'],
+                    'class': ['keys']
+                },
+                '5': {
+                    eng: ['f', 'F', 'F'],
+                    rus: ['а', 'А', 'А'],
+                    'class': ['keys']
+                },
+                '6': {
+                    eng: ['g', 'G', 'G'],
+                    rus: ['п', 'П', 'П'],
+                    'class': ['keys']
+                },
+                '7': {
+                    eng: ['h', 'H', 'H'],
+                    rus: ['р', 'Р', 'Р'],
+                    'class': ['keys']
+                },
+                '8': {
+                    eng: ['j', 'J', 'J'],
+                    rus: ['о', 'О', 'О'],
+                    'class': ['keys']
+                },
+                '9': {
+                    eng: ['k', 'K', 'K'],
+                    rus: ['л', 'Л', 'Л'],
+                    'class': ['keys']
+                },
+                '10': {
+                    eng: ['l', 'L', 'L'],
+                    rus: ['д', 'Д', 'Д'],
+                    'class': ['keys']
+                },
+                '11': {
+                    eng: [';', ':', ';'],
+                    rus: ['ж', 'Ж', 'Ж'],
+                    'class': ['keys']
+                },
+                "12": {
+                    eng: ["'", '"', "'"],
+                    rus: ['э', 'Э', 'Э'],
+                    'class': ['keys']
+                },
+                '13': {
+                    eng: ["Enter", "Enter", "Enter"],
+                    rus: ["Enter", "Enter", "Enter"],
+                    'class': ['keys', 'enter-key']
+                }
+            },
+            row4: {
+                '1': {
+                    eng: ['Shift', 'Shift', 'Shift'],
+                    rus: ['Shift', 'Shift', 'Shift'],
+                    'class': ['keys', 'shift-key', 'shift-left']
+                },
+                '2': {
+                    eng: ['z', 'Z', 'Z'],
+                    rus: ['я', 'Я', 'Я'],
+                    'class': ['keys']
+                },
+                '3': {
+                    eng: ['x', 'X', 'X'],
+                    rus: ['ч', 'Ч', 'Ч'],
+                    'class': ['keys']
+                },
+                '4': {
+                    eng: ['c', 'C', 'C'],
+                    rus: ['с', 'С', 'С'],
+                    'class': ['keys']
+                },
+                '5': {
+                    eng: ['v', 'V', 'V'],
+                    rus: ['м', 'М', 'М'],
+                    'class': ['keys']
+                },
+                '6': {
+                    eng: ['b', 'B', 'B'],
+                    rus: ['и', 'И', 'И'],
+                    'class': ['keys']
+                },
+                '7': {
+                    eng: ['n', 'N', 'N'],
+                    rus: ['т', 'Т', 'Т'],
+                    'class': ['keys']
+                },
+                '8': {
+                    eng: ['m', 'M', 'M'],
+                    rus: ['ь', 'Ь', 'Ь'],
+                    'class': ['keys']
+                },
+                '9': {
+                    eng: [',', '<', ','],
+                    rus: ['б', 'Б', 'Б'],
+                    'class': ['keys']
+                },
+                '10': {
+                    eng: ['.', '>', '.'],
+                    rus: ['ю', 'Ю', 'Ю'],
+                    'class': ['keys']
+                },
+                '11': {
+                    eng: ['.', ',', '.'],
+                    rus: ['/', '?', '/'],
+                    'class': ['keys']
+                },
+                "12": {
+                    eng: ["?", '|', "?"],
+                    rus: ['?', '|', '?'],
+                    'class': ['keys']
+                },
+                '13': {
+                    eng: ["Shift", "Shift", "Shift"],
+                    rus: ["Shift", "Shift", "Shift"],
+                    'class': ['keys', 'shift-key', 'shift-right']
+                }
+            },
+            row5: {
+                '1': {
+                    eng: ['Ctrl', 'Ctrl', 'Ctrl'],
+                    rus: ['Ctrl', 'Ctrl', 'Ctrl'],
+                    'class': ['keys', 'ctrl-key', 'ctrl-left']
+                },
+                '2': {
+                    eng: ['Eng', 'Eng', 'Eng'],
+                    rus: ['Рус', 'Рус', 'Рус'],
+                    'class': ['keys', 'lang-key']
+                },
+                '3': {
+                    eng: ['Alt', 'Alt', 'Alt'],
+                    rus: ['Alt', 'Alt', 'Alt'],
+                    'class': ['keys', 'alt-key', 'alt-left']
+                },
+                '4': {
+                    eng: ['', '', ''],
+                    rus: ['', '', ''],
+                    'class': ['keys', 'space-key']
+                },
+                '5': {
+                    eng: ['Alt', 'Alt', 'Alt'],
+                    rus: ['Alt', 'Alt', 'Alt'],
+                    'class': ['keys', 'alt-key', 'alt-right']
+                },
+                '6': {
+                    eng: ['Fn', 'Fn', 'Fn'],
+                    rus: ['Fn', 'Fn', 'Fn'],
+                    'class': ['keys', 'function-key']
+                },
+                '7': {
+                    eng: ['Ctrl', 'Ctrl', 'Ctrl'],
+                    rus: ['Ctrl', 'Ctrl', 'Ctrl'],
+                    'class': ['keys', 'ctrl-key', 'ctrl-right']
+                }
+            },
+        }
+
+        this.keys = keys;
+    }
+
+    getKeysElements(obj, arr, shift = false, caps = false, lang) {
+        let rowCounter = 0;
+
+        for (let row in obj) {
+
+            for (let item in obj[row]) {
+
+                let keyElem = document.createElement('div');
+                keyElem.setAttribute('class', '');
+
+                for (let key in obj[row][item]) {
+                    if (!shift && !caps) {
+                        if (key == lang) {
+                            keyElem.textContent = obj[row][item][key][0];
+                        }
+                        if (key == 'class') {
+                            obj[row][item][key].forEach(item => {
+                                keyElem.classList.add(item);
+                            })
+                        }
+                    }
+                    
+                    // console.log(key)
+                    
+                console.log(obj[row][item][key])
+                }
+
+                arr[rowCounter].append(keyElem);
+            }
+            rowCounter++;
+        }
+    }
+}
+
+let keyboard = new Keyboard();
+
+keyboard.getMarkup();
+keyboard.getRows();
+keyboard.getKeys();
+keyboard.getKeysElements(keyboard.keys, keyboard.rows, false, false, 'eng');
+
+keyboard
+
+
+
+
 let body = document.querySelector('body');
 let keyboard_wrapper = document.querySelector('.keyboard__wrapper');
 let keys = document.querySelectorAll('.keys');
@@ -93,9 +503,11 @@ keys.forEach(item => {
         } else if (item.classList.contains('backspace-key')) {
             text_input.value = text_input.value.slice(0, text_input.value.length - 1)
         } else if (item.classList.contains('space-key')) {
-            text_input.value += " "; 
+            text_input.value += " ";
         }  else if (item.classList.contains('enter-key')) {
-            text_input.value += "\n"; 
+            text_input.value += "\n";
+        }  else if (item.classList.contains('tab-key')) {
+            text_input.value += "    ";
         }
 
         item.classList.add('active')
