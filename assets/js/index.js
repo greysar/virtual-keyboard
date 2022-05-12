@@ -88,8 +88,8 @@ color_input.addEventListener('input', () => {
 
 keys.forEach(item => {
     item.addEventListener('click', () => {
-        if (item.classList.length == 1 || item.classList.contains('slash-key')) {
-            text_input.value += item.textContent;
+        if (item.classList.length == 1 || item.classList.contains('keys_night') && item.textContent.length == 1 || item.classList.contains('slash-key')) {
+           text_input.value += item.textContent;
         } else if (item.classList.contains('backspace-key')) {
             text_input.value = text_input.value.slice(0, text_input.value.length - 1)
         } else if (item.classList.contains('space-key')) {
