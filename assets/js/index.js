@@ -5,6 +5,7 @@ class Keyboard {
     constructor(keyboard) {
         this.rows;
         this.keys;
+        this.status = 0;
     }
 
     getMarkup() {
@@ -331,7 +332,7 @@ class Keyboard {
                 },
                 '2': {
                     eng: ['Eng', 'Eng', 'Eng'],
-                    rus: ['Рус', 'Рус', 'Рус'],
+                    rus: ['Rus', 'Rus', 'Rus'],
                     'class': ['keys', 'lang-key']
                 },
                 '3': {
@@ -367,35 +368,60 @@ class Keyboard {
 
     getKeysElements(obj, arr, shift = false, caps = false, lang) {
         let rowCounter = 0;
+        let itemCounter = 0;
+
+
 
         for (let row in obj) {
-
+            itemCounter = 0;
             for (let item in obj[row]) {
-
                 let keyElem = document.createElement('div');
-                keyElem.setAttribute('class', '');
+
+                if (this.status == 0) keyElem.setAttribute('class', '');
 
                 for (let key in obj[row][item]) {
-                    if (!shift && !caps) {
+                    if (!shift && !caps && this.status == 0) {
                         if (key == lang) {
                             keyElem.textContent = obj[row][item][key][0];
                         }
-                        if (key == 'class') {
+
+                        if (key == 'class' && this.status == 0) {
                             obj[row][item][key].forEach(item => {
                                 keyElem.classList.add(item);
                             })
                         }
                     }
-                    
-                    // console.log(key)
-                    
-                console.log(obj[row][item][key])
+
+
+
+                    if (shift) {
+                        if (key == lang) {
+                            let keyContent = arr[rowCounter].children;
+                            keyContent[itemCounter].textContent = obj[row][item][key][1];
+                            itemCounter++;
+                            // console.log(itemCounter)
+                        }
+                    }
+
+                    if (!shift && this.status == 1) {
+                        if (key == lang) {
+                            let keyContent = arr[rowCounter].children;
+                            keyContent[itemCounter].textContent = obj[row][item][key][0];
+                            // console.log(key)
+                            itemCounter++;
+                        }
+                    }
+
+
                 }
 
-                arr[rowCounter].append(keyElem);
+                if (this.status == 0) arr[rowCounter].append(keyElem);
             }
             rowCounter++;
         }
+        this.status = 1;
+        rowCounter = 0;
+        itemCounter = 0;
     }
 }
 
@@ -423,13 +449,17 @@ let toggle_circle = document.querySelector('.toggle-circle');
 let color_input = document.querySelector('.colors-input');
 let change_color = document.querySelector('.color-changer');
 let text_input = document.querySelector('.text');
-let keyboard_lights = document.querySelector('.keyboard__color')
+let keyboard_lights = document.querySelector('.keyboard__color');
+let lang_key = document.querySelector('.lang-key');
+let shiftStatus = false;
+let currentLang = lang_key.textContent.toLocaleLowerCase();
 
 
 for (let i = 0; i < keys.length; i++) {
     keys[i].setAttribute('keyname', keys[i].innerText);
     keys[i].setAttribute('lowerCaseName', keys[i].innerText.toLowerCase());
 }
+
 
 window.addEventListener('keydown', (e) => {
     for (let i = 0; i < keys.length; i++) {
@@ -442,9 +472,17 @@ window.addEventListener('keydown', (e) => {
 
         if (e.code == 'ShiftLeft') {
             shift_right.classList.remove('active');
+            if (!shiftStatus) {
+                keyboard.getKeysElements(keyboard.keys, keyboard.rows, true, false, currentLang);
+                shiftStatus = true;
+            }
         }
         if (e.code == 'ShiftRight') {
             shift_left.classList.remove('active');
+            if (!shiftStatus) {
+                keyboard.getKeysElements(keyboard.keys, keyboard.rows, true, false, currentLang);
+                shiftStatus = true;
+            }
         }
         if (e.code == 'CapsLock') {
             caps_lock_key.classList.toggle('active');
@@ -465,10 +503,18 @@ window.addEventListener('keyup', (e) => {
         if (e.code == 'ShiftLeft') {
             shift_right.classList.remove('active');
             shift_right.classList.remove('remove');
+            if (shiftStatus) {
+                keyboard.getKeysElements(keyboard.keys, keyboard.rows, false, false, currentLang);
+                shiftStatus = false;
+            }
         }
         if (e.code == 'ShiftRight') {
             shift_left.classList.remove('active');
             shift_left.classList.remove('remove');
+            if (shiftStatus) {
+                keyboard.getKeysElements(keyboard.keys, keyboard.rows, false, false, currentLang);
+                shiftStatus = false;
+            }
         }
         setTimeout(() => {
             keys[i].classList.remove('remove');
@@ -499,14 +545,14 @@ color_input.addEventListener('input', () => {
 keys.forEach(item => {
     item.addEventListener('click', () => {
         if (item.classList.length == 1 || item.classList.contains('keys_night') && item.textContent.length == 1 || item.classList.contains('slash-key')) {
-           text_input.value += item.textContent;
+            text_input.value += item.textContent;
         } else if (item.classList.contains('backspace-key')) {
             text_input.value = text_input.value.slice(0, text_input.value.length - 1)
         } else if (item.classList.contains('space-key')) {
             text_input.value += " ";
-        }  else if (item.classList.contains('enter-key')) {
+        } else if (item.classList.contains('enter-key')) {
             text_input.value += "\n";
-        }  else if (item.classList.contains('tab-key')) {
+        } else if (item.classList.contains('tab-key')) {
             text_input.value += "    ";
         }
 
@@ -515,4 +561,16 @@ keys.forEach(item => {
             item.classList.remove('active');
         }, 200);
     })
+});
+
+lang_key.addEventListener('click', () => {
+    if(currentLang == 'eng') {
+        currentLang = 'rus'
+        keyboard.getKeysElements(keyboard.keys, keyboard.rows, false, false, currentLang);
+        console.log('Lang key');
+    } else {
+        currentLang = 'eng';
+        keyboard.getKeysElements(keyboard.keys, keyboard.rows, false, false, currentLang);
+        console.log('Lang key');
+    }
 });
